@@ -1,9 +1,9 @@
 // const prisma = require("../prisma/db");
-const Product = require("../models/product");
+const Products = require("../models/products");
 
 async function getLatestProducts(limit = 5) {
   try {
-    const products = await Product.find().sort({ createdAt: -1 }).limit(limit);
+    const products = await Products.find().sort({ createdAt: -1 }).limit(limit);
     return products;
   } catch (error) {
     console.error("Error getting latest products:", error);

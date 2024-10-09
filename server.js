@@ -1,16 +1,16 @@
-require("dotenv").config();
 const express = require("express");
+const app = express();
+require("dotenv").config();
 const cors = require("cors");
+
 const webRouter = require("./routers/webRouter");
 const authRouter = require("./routers/authRouter");
-const app = express();
 const apiRouter = require("./routers/apiRouter");
-const mongoose = require("mongoose");
 
-const port = process.env.PORT || 4000;
-//config req.body
-// app.use(express.json()) //for json
-// app.use(express.urlencoded({ extended: true })) //for form data
+const mongoose = require("mongoose");
+const { connectDb } = require("./configs/database");
+
+const port = process.env.PORT || 10000;
 
 app.use(
   cors({
@@ -24,14 +24,25 @@ app.use(
   })
 );
 
-//khai báo route
 app.use("/", webRouter);
 app.use("/auth", authRouter);
-app.use("/api", apiRouter); // Khai báo router cho homepage
+app.use("/api", apiRouter);
 
 const dbURL = process.env.DATABASE_URL;
-mongoose.connect(dbURL, { serverSelectionTimeoutMS: 30000 }); // Timeout 30 giây
+mongoose.connect(dbURL, { serverSelectionTimeoutMS: 30000 });
 
-app.listen(port, () => {
-  console.log(`app listening on port ${port}`);
-});
+async function connectToDatabase() {
+  try {
+    await connectDb();
+    console.log("Connected to database");
+  } catch (error) {
+    console.error("Failed to connect to database", error);
+  }
+}
+connectToDatabase()
+  .then(() =>
+    app.listen(port, () => {
+      console.log(`Server listening on port ${port}`);
+    })
+  )
+  .catch((error) => console.error("Failed to start server", error));
