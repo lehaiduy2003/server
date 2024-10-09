@@ -1,5 +1,5 @@
-const { getTokenFromHeaders } = require("../utils/token");
 const jwt = require("jsonwebtoken");
+const { getTokenFromHeaders } = require("../utils/tokens");
 
 // Middleware to authenticate the token - check if the token is valid
 function authenticateToken(req, res, next) {

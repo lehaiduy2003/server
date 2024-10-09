@@ -5,7 +5,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 /**
  * create a payment intent with stripe, return the payment intent client secret
- * @param {[{price: number, quantity: number}]} items
+ * @param {[{id: ObjectId, name: string, img: string, price: number, quantity: number}]} items
  * @returns {Promise<string>}
  */
 const createPaymentIntent = async (items) => {

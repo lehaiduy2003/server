@@ -3,7 +3,7 @@ const {
   userSignIn,
   getNewAccessToken,
 } = require("../services/authService");
-const { getTokenFromHeaders } = require("../utils/token");
+const { getTokenFromHeaders } = require("../utils/tokens");
 
 async function signUp(req, res) {
   const { email, password } = req.body;

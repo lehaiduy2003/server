@@ -1,18 +1,78 @@
-// utils/tokens.js
 const jwt = require("jsonwebtoken");
 
-function generateTokens(user) {
-  const accessToken = jwt.sign(
-    { userId: user._id },
-    process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "15m" }
-  );
-  const refreshToken = jwt.sign(
-    { userId: user._id },
-    process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: "7d" }
-  );
-  return { accessToken, refreshToken };
+const SECRET_KEY = process.env.SECRET_KEY;
+const commonOptions = { algorithm: "HS512" };
+
+function getTokenFromHeaders(req) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  return token;
 }
 
-module.exports = { generateTokens };
+function generateTokens(user) {
+  //console.log(user);
+
+  const now = Date.now();
+
+  const refreshToken = jwt.sign(
+    {
+      sub: user._id,
+      iat: now,
+      exp: now + 30 * 24 * 60 * 60 * 1000, // 30 days
+    },
+    SECRET_KEY,
+    commonOptions
+  );
+
+  const accessToken = jwt.sign(
+    {
+      sub: user._id,
+      iat: now,
+      exp: now + 24 * 60 * 60 * 1000, // 1 day
+      iss: `https://capstone-project-1-kfck.onrender.com`,
+      aud: "EcoTrade",
+      role: user.role,
+    },
+    SECRET_KEY,
+    commonOptions
+  );
+
+  return { refreshToken, accessToken };
+}
+function verifyToken(token) {
+  return jwt.verify(token, process.env.SECRET_KEY, (error, payload) => {
+    if (error) {
+      // Check if the token has expired
+      if (error.name === "TokenExpiredError") {
+        return null;
+      }
+      return null;
+    }
+    return payload;
+  });
+}
+
+function refreshAccessToken(token) {
+  const payloadDecoded = verifyToken(token);
+
+  if (!payloadDecoded) {
+    throw new Error("Invalid token");
+  }
+
+  const payload = {
+    sub: payloadDecoded.sub,
+    iat: Date.now(),
+    exp: Date.now() + 24 * 60 * 60 * 1000, // 1 day
+    iss: `https://capstone-project-1-kfck.onrender.com`,
+    aud: "EcoTrade",
+    role: payloadDecoded.role,
+  };
+  return jwt.sign(payload, SECRET_KEY, commonOptions, { expiresIn: "1d" });
+}
+
+module.exports = {
+  generateTokens,
+  getTokenFromHeaders,
+  refreshAccessToken,
+  verifyToken,
+};

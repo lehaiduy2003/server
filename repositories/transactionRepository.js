@@ -1,5 +1,4 @@
 const Transactions = require("../models/transactions");
-const { ObjectId } = require("mongodb");
 
 /**
  * insert new transaction into transactions collection
@@ -9,12 +8,17 @@ const { ObjectId } = require("mongodb");
  * @param {number} shippingFee (default = 30000)
  * @returns {Promise<Document<Transactions> | null>}
  */
-async function insertNewTransaction(items, buyer, seller, shippingFee = 30000) {
+async function insertNewTransaction(
+  products,
+  buyer,
+  seller,
+  shippingFee = 30000
+) {
   try {
     const transaction = await Transactions.create({
       buyer: buyer,
       seller: seller,
-      products: items,
+      products: products,
       shippingFee: shippingFee,
     });
     console.log(transaction);
@@ -32,7 +36,6 @@ async function insertNewTransaction(items, buyer, seller, shippingFee = 30000) {
  * @returns {Promise<Boolean>}
  */
 async function updateTransactionStatusByID(_id, status) {
-  const id = ObjectId.createFromHexString(_id); // Convert string id to ObjectId
   try {
     await Transactions.findByIdAndUpdate(id, { status: status });
     return true;

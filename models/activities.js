@@ -8,9 +8,9 @@ const activitiesSchema = new mongoose.Schema({
     id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Accounts",
+      required: true,
     },
-    role: "admin" | "buyer" | "seller" | "recycler",
-    required: true,
+    role: { type: String, enum: ["buyer", "recycler", "admin", "seller"] },
   },
 });
 

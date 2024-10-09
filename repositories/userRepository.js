@@ -1,15 +1,13 @@
-const { connectToCollection, closeConnection } = require("../configs/database");
+const Accounts = require("../models/accounts");
 
 async function checkUser(email) {
   try {
-    const collection = await connectToCollection("users");
-    const user = await collection.findOne({ email: email });
+    //const collection = await connectToCollection("users");
+    const user = await Accounts.findOne({ email: email });
     return user;
   } catch (error) {
     console.error(error);
     return null;
-  } finally {
-    await closeConnection();
   }
 }
 
@@ -19,20 +17,14 @@ async function insertUser(email, password) {
     return null;
   }
   try {
-    const collection = await connectToCollection("users");
-    const user = await collection.insertOne({
-      email: email,
-      password: password,
-    });
+    const user = await Accounts.create({ email: email, password: password });
     if (user) {
-      const userInfo = await connectToCollection.findOne({ email: email });
+      const userInfo = await Accounts.findOne({ email: email });
       return userInfo;
     }
   } catch (error) {
     console.error(error);
     return null;
-  } finally {
-    await closeConnection();
   }
 }
 

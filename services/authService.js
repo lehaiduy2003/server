@@ -2,7 +2,7 @@
 const { insertUser, checkUser } = require("../repositories/userRepository");
 
 const { hashPassword, verifyPassword } = require("../utils/password");
-const { generateTokens, refreshToken } = require("../utils/token");
+const { generateTokens, refreshAccessToken } = require("../utils/tokens");
 
 async function userSignUp(email, password) {
   const hashedPassword = hashPassword(password);
@@ -32,7 +32,7 @@ async function userSignUp(email, password) {
 //   return tokenFound
 // }
 function getNewAccessToken(token) {
-  return refreshToken(token);
+  return refreshAccessToken(token);
 }
 
 async function userSignIn(email, password) {

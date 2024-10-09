@@ -7,37 +7,37 @@ const transactionsSchema = new mongoose.Schema({
     id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "UserProfiles",
+      required: true,
     },
     address: { type: String, required: true },
     phone: { type: String, required: true },
-    required: true,
   },
   seller: {
     id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "UserProfiles",
+      required: true,
     },
     address: { type: String, required: true },
     phone: { type: String, required: true },
-    required: true,
   },
   products: [
     {
       id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Products",
+        required: true,
       },
       name: { type: String, required: true },
       img: { type: String, required: true },
       price: { type: Number, required: true },
       quantity: { type: Number, require: true },
-      required: true,
     },
   ],
   shippingFee: { type: Number, default: 30000 },
   status: {
-    type: "pending" | "shipping" | "completed" | "refunded",
-    required: true,
+    type: String,
+    enum: ["pending", "shipping", "completed", "refunded"],
     default: "pending",
   },
 });
