@@ -5,6 +5,7 @@
   "scripts": {
     "test": "jest",
     "dev": "nodemon server.local.js",
+    "ngrok": "ngrok http --domain=factually-selected-vervet.ngrok-free.app 3000",
     "start": "node server.js"
   },
   "repository": {
