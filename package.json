@@ -29,7 +29,8 @@
     "express": "4.21.0",
     "jsonwebtoken": "9.0.2",
     "mongodb": "6.9.0",
-    "mongoose": "8.7.0"
+    "mongoose": "8.7.0",
+    "stripe": "^17.1.0"
   },
   "devDependencies": {
     "jest": "29.7.0",

@@ -30,9 +30,11 @@ const transactionsSchema = new mongoose.Schema({
       name: { type: String, required: true },
       img: { type: String, required: true },
       price: { type: Number, required: true },
+      quantity: { type: Number, require: true },
       required: true,
     },
   ],
+  shippingFee: { type: Number, default: 30000 },
   status: {
     type: "pending" | "shipping" | "completed" | "refunded",
     required: true,

@@ -27,6 +27,15 @@ const userProfilesSchema = new mongoose.Schema({
   },
   products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Products" }],
   payments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Payments" }],
+  cart: [
+    {
+      id: { type: mongoose.Schema.Types.ObjectId, ref: "Products" },
+      img: { type: String },
+      name: { type: String },
+      price: { type: Number },
+      quantity: { type: Number },
+    },
+  ],
   likes: [
     {
       id: { type: mongoose.Schema.Types.ObjectId, ref: "Products" },
@@ -45,7 +54,7 @@ const userProfilesSchema = new mongoose.Schema({
 });
 
 userProfilesSchema.index({ phone: 1 }, { unique: true, sparse: true });
-userProfilesSchema.index({ accountId: 1 });
+userProfilesSchema.index({ accountId: 1 }, { unique: true });
 userProfilesSchema.index({ reputationScore: 1 });
 
 module.exports = mongoose.model("UserProfiles", userProfilesSchema);
