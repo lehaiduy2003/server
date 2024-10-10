@@ -11,8 +11,8 @@ const recycleCampaignsSchema = new mongoose.Schema({
   recycledWeight: { type: Number, required: true },
   recycledAmount: { type: Number, required: true },
   participants: { type: Number, required: true },
-  createAt: { type: Date, default: Date.now },
-  updateAt: { type: Date, default: Date.now },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "UserProfiles",

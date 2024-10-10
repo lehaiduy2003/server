@@ -3,6 +3,8 @@ const {
   userSignIn,
   getNewAccessToken,
 } = require("../services/authService");
+
+const errorHandler = require("../middlewares/errorMiddleware");
 const { getTokenFromHeaders } = require("../utils/tokens");
 
 async function signUp(req, res) {
@@ -20,7 +22,7 @@ async function signUp(req, res) {
     }
     return res.status(201).send(result);
   } catch (error) {
-    return res.sendStatus(500);
+    errorHandler(error, req, res);
   }
 }
 
@@ -42,7 +44,7 @@ function generateNewAccessToken(req, res) {
 
     res.status(200).send({ accessToken: newAccessToken });
   } catch (error) {
-    res.status(500).send({ error: "Internal server error" });
+    errorHandler(error, req, res);
   }
 }
 
@@ -63,7 +65,7 @@ async function signIn(req, res) {
     // Send the result (tokens and user info) to the client
     res.status(200).send(result);
   } catch (error) {
-    res.status(500).send({ error: "Internal server error" });
+    errorHandler(error, req, res);
   }
 }
 

@@ -31,17 +31,21 @@ async function insertNewTransaction(
 
 /**
  * update transaction status by transaction _id.
- * @param {string} _id
+ * @param {string} id
  * @param {"pending" | "shipping" | "completed" | "refunded"} status
  * @returns {Promise<Boolean>}
  */
-async function updateTransactionStatusByID(_id, status) {
+async function updateTransactionStatusByID(id, status) {
   try {
-    await Transactions.findByIdAndUpdate(id, { status: status });
-    return true;
+    const updatedTransaction = await Transactions.findByIdAndUpdate(
+      id,
+      { status: status },
+      { new: true } // This option returns the updated document
+    );
+    return updatedTransaction;
   } catch (error) {
-    console.error("error while updating transaction status: ", error);
-    return false;
+    console.error("error while updating transaction status: ");
+    throw error;
   }
 }
 module.exports = { insertNewTransaction, updateTransactionStatusByID };

@@ -1,3 +1,4 @@
+const errorHandler = require("../middlewares/errorMiddleware");
 const {
   createTransaction,
   updateTransactionStatus,
@@ -16,29 +17,30 @@ async function makeTransaction(req, res) {
 
     res.status(201).send(transaction);
   } catch (error) {
-    res.sendStatus(500);
+    errorHandler(error, req, res);
   }
 }
 
 async function changeTransactionStatus(req, res) {
-  const { transactionId, status } = req.body;
+  const { status } = req.body;
+  const { id } = req.params;
 
-  if (!transactionId || !status)
-    res.status(400).send({ error: "invalid data provided" });
+  if (!id || !status)
+    return res.status(400).send({ error: "invalid data provided" });
 
   try {
-    const updatedTransaction = await updateTransactionStatus(
-      transactionId,
-      status
-    );
+    const updatedTransaction = await updateTransactionStatus(id, status);
 
     if (!updatedTransaction)
-      res.status(502).send({ error: "No transaction updated" });
+      return res.status(502).send({ error: "No transaction updated" });
 
-    res.status(200).send(updatedTransaction);
+    return res.status(200).send(updatedTransaction);
   } catch (error) {
-    res.sendStatus(500);
+    errorHandler(error, req, res);
   }
 }
+
+// TODO: Implement getTransactionHistory function
+async function getTransactionHistory(req, res) {}
 
 module.exports = { makeTransaction, changeTransactionStatus };

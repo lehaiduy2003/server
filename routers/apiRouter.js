@@ -1,25 +1,41 @@
 // server/routers/homeRouter.js
-const { getHomepage } = require("../controllers/homeController");
+const {
+  getHomepage,
+  searchProducts,
+} = require("../controllers/productController");
 const { checkout } = require("../controllers/paymentController");
-const { makeTransaction } = require("../controllers/transactionController");
-const authenticateToken = require("../middlewares/authentication");
+const {
+  makeTransaction,
+  changeTransactionStatus,
+} = require("../controllers/transactionController");
+
+const authenticateToken = require("../middlewares/authMiddleware");
+const { checkCache } = require("../middlewares/cacheMiddleware");
 
 const apiRouter = require("express").Router();
 
-apiRouter.get("/homepage", getHomepage);
+apiRouter.get("/products", authenticateToken, (req, res) => {
+  console.log("GET /products");
+  getHomepage(req, res);
+});
+
+apiRouter.get("/products/search", authenticateToken, checkCache, (req, res) => {
+  console.log("GET /products/search");
+  searchProducts(req, res);
+});
 
 apiRouter.post("/checkout", authenticateToken, (req, res) => {
-  console.log("POST /api/checkout");
+  console.log("POST /checkout");
   checkout(req, res);
 });
 
-apiRouter.post("/create-transaction", authenticateToken, (req, res) => {
-  console.log("POST /api/create-transaction");
+apiRouter.post("/transactions", authenticateToken, (req, res) => {
+  console.log("POST /transactions");
   makeTransaction(req, res);
 });
 
-apiRouter.post("/change-transaction-status", authenticateToken, (req, res) => {
-  console.log("POST /api/change-transaction-status");
+apiRouter.patch("/transactions/:id", authenticateToken, (req, res) => {
+  console.log("PATCH /transactions/:id");
   changeTransactionStatus(req, res);
 });
 

@@ -1,8 +1,11 @@
-const { getLatestProducts } = require("../repositories/homeRepository");
+const {
+  getHomepageProducts,
+  findProductsWithFilter,
+} = require("../repositories/productRepository");
 
-async function getHomepageData() {
+async function getHomepageData(limit, skip) {
   try {
-    const latestProducts = await getLatestProducts();
+    const latestProducts = await getHomepageProducts(limit, skip);
 
     return {
       latestProducts,
@@ -13,6 +16,15 @@ async function getHomepageData() {
   }
 }
 
+async function getProducts(name, sort, orderBy, limit) {
+  const products = await findProductsWithFilter(name, sort, orderBy, limit);
+
+  if (!products) throw new Error("can not get products from database: ");
+
+  return products;
+}
+
 module.exports = {
   getHomepageData,
+  getProducts,
 };

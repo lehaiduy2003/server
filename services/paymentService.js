@@ -8,15 +8,18 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
  * @param {[{id: ObjectId, name: string, img: string, price: number, quantity: number}]} items
  * @returns {Promise<string>}
  */
-const createPaymentIntent = async (items) => {
+const createPaymentIntent = async (products) => {
   try {
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: calculateOrderAmount(items),
+      amount: calculateOrderAmount(products),
       currency: "vnd",
     });
+
+    if (!paymentIntent) throw new Error("error while creating payment intent");
+
     return paymentIntent.client_secret;
   } catch (error) {
-    console.error("error while creating payment intent: ", error);
+    console.error(error);
     return null;
   }
 };

@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
 const transactionsSchema = new mongoose.Schema({
-  createAt: { type: Date, default: Date.now },
-  updateAt: { type: Date, default: Date.now },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
   buyer: {
     id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -44,6 +44,6 @@ const transactionsSchema = new mongoose.Schema({
 
 transactionsSchema.index({ "products.id": 1 });
 transactionsSchema.index({ status: 1 });
-transactionsSchema.index({ createdAt: 1 });
+transactionsSchema.index({ createdAt: -1 });
 
 module.exports = mongoose.model("Transactions", transactionsSchema);

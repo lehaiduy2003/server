@@ -39,21 +39,26 @@ function generateTokens(user) {
 
   return { refreshToken, accessToken };
 }
+/**
+ * verify is valid token or not, return 1 if valid, -1 if not valid, 0 if expired
+ * @param {string} token
+ * @returns {-1 | 0 | 1}
+ */
 function verifyToken(token) {
-  return jwt.verify(token, process.env.SECRET_KEY, (error, payload) => {
+  return jwt.verify(token, process.env.SECRET_KEY, (error) => {
     if (error) {
       // Check if the token has expired
       if (error.name === "TokenExpiredError") {
-        return null;
+        return 0; // Token has expired
       }
-      return null;
+      return -1; // Unauthorized
     }
-    return payload;
+    return 1; // Token is valid
   });
 }
 
 function refreshAccessToken(token) {
-  const payloadDecoded = verifyToken(token);
+  const payloadDecoded = jwt.decode(token);
 
   if (!payloadDecoded) {
     throw new Error("Invalid token");

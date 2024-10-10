@@ -6,15 +6,11 @@ const accountsSchema = new mongoose.Schema({
   password: { type: String, required: true },
   role: {
     type: String,
-    enum: ["buyer", "recycler", "admin", "seller"],
-    default: "buyer",
+    enum: ["customer", "recycler", "admin"],
+    default: "customer",
   },
-  createAt: { type: Date, required: true, default: Date.now },
-  updateAt: { type: Date, required: true, default: Date.now },
-  identityCard: {
-    front: { type: String },
-    back: { type: String },
-  },
+  createdAt: { type: Date, required: true, default: Date.now },
+  updatedAt: { type: Date, required: true, default: Date.now },
   isVerified: { type: Boolean, required: true, default: false },
   status: {
     type: Boolean,

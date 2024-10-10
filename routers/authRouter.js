@@ -3,22 +3,23 @@ const {
   generateNewAccessToken,
   signIn,
 } = require("../controllers/authController");
-const authenticateToken = require("../middlewares/authentication");
-const express = require("express");
-const authRouter = express.Router();
+
+const authenticateToken = require("../middlewares/authMiddleware");
+
+const authRouter = require("express").Router();
 
 authRouter.post("/sign-up", (req, res) => {
-  console.log("POST /auth/sign-up");
+  console.log("POST /sign-up");
   signUp(req, res);
 });
 
-authRouter.post("/refresh-Access-Token", authenticateToken, (req, res) => {
-  console.log("POST /refresh-Access-Token");
+authRouter.post("/refresh", authenticateToken, (req, res) => {
+  console.log("POST /refresh");
   generateNewAccessToken(req, res);
 });
 
 authRouter.post("/sign-in", (req, res) => {
-  console.log("POST /auth/sign-in");
+  console.log("POST /sign-in");
   signIn(req, res); // Gọi controller signIn để xử lý req
 });
 

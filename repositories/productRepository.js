@@ -1,24 +1,60 @@
-async function getProducts() {
-  return [
-    {
-      id: 1,
-      img: "https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/airpods-pro-2-hero-select-202409_FV1?wid=976&hei=916&fmt=jpeg&qlt=90&.v=1725492499003",
-      name: "airpod pro 2",
-      price: 6199000,
-    },
-    {
-      id: 2,
-      img: "https://product.hstatic.net/200000456445/product/i-gucci-nu-ophidia-gg-leather-beige-brown-550618-96i3b-8745_view_amp-3_4d17ca51dce9424dbee7a7106fe92883_master.png",
-      name: "gucci bag",
-      price: 35999000,
-    },
-    {
-      id: 3,
-      img: "https://boba.vn/static/san-pham/thoi-trang-nam/ao-khoac-nam/ao-khoac-ni/ao-khoac-alan-walker/ao-khoac-n.jpg",
-      name: "Alan Walker hoodie",
-      price: 85000,
-    },
-  ];
+// const prisma = require("../prisma/db");
+const Products = require("../models/products");
+async function getHomepageProducts(limit = 10, scroll = 1) {
+  try {
+    const skip = (scroll - 1) * limit;
+    const products = await Products.find()
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .skip(skip);
+    return products;
+  } catch (error) {
+    console.error("Error getting latest products:", error);
+    throw error;
+  }
+  // // test
+  // const explainResult = await Product.find()
+  //   .sort({ createdAt: -1 })
+  //   .limit(limit)
+  //   .explain();
+  // console.log(explainResult);
 }
 
-module.exports = { getProducts };
+// TODO: try to benchmark the performance of the search index
+/**
+ * using search index to find products with filter
+ * @param {string} name
+ * @param {string} sort
+ * @param {string} orderBy: 1 or -1
+ * @param {number} limit
+ * @returns {[Products]}
+ */
+async function findProductsWithFilter(
+  name,
+  sort = "createdAt",
+  orderBy = -1,
+  limit = 10
+) {
+  try {
+    const products = await Products.aggregate([
+      {
+        $search: {
+          index: "product_name", // index name
+          text: {
+            query: name, // query search
+            path: "name", // search in name field
+            fuzzy: { maxEdits: 1 }, // optional fuzzy search for incorrect characters (maxEdits: 1)
+          },
+        },
+      },
+      { $sort: { [sort]: Number(orderBy) } },
+      { $limit: limit },
+    ]);
+    return products;
+  } catch (error) {
+    console.error("Error getting products with filter: ", error);
+    throw error;
+  }
+}
+
+module.exports = { getHomepageProducts, findProductsWithFilter };

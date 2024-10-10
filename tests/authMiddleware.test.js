@@ -1,8 +1,8 @@
-const authenticateToken = require("../middlewares/authentication");
-const { getTokenFromHeaders } = require("../utils/token");
+const authenticateToken = require("../middlewares/authMiddleware");
+const { getTokenFromHeaders, verifyToken } = require("../utils/tokens");
 const jwt = require("jsonwebtoken");
 
-jest.mock("../utils/token");
+jest.mock("../utils/tokens");
 jest.mock("jsonwebtoken");
 
 describe("authenticateToken middleware", () => {
@@ -28,12 +28,8 @@ describe("authenticateToken middleware", () => {
   });
 
   test("should return 401 if token is expired", () => {
-    const expiredPayload = { id: 1, name: "test", exp: Date.now() - 1000 }; // expired 1 second ago
-
-    getTokenFromHeaders.mockReturnValue("expired_token");
-    jwt.verify.mockImplementation((token, secret, callback) => {
-      callback({ name: "TokenExpiredError" }, expiredPayload);
-    });
+    getTokenFromHeaders.mockReturnValue("expiredToken");
+    verifyToken.mockReturnValue(0);
 
     authenticateToken(req, res, next);
 
@@ -44,25 +40,22 @@ describe("authenticateToken middleware", () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  test("should return 403 if token is invalid", () => {
-    getTokenFromHeaders.mockReturnValue("invalid_token");
-    jwt.verify.mockImplementation((token, secret, callback) => {
-      callback(new Error("invalid token"), null);
-    });
+  test("should return 401 if token is invalid", () => {
+    getTokenFromHeaders.mockReturnValue("invalidToken");
+    verifyToken.mockReturnValue(-1);
 
     authenticateToken(req, res, next);
 
-    expect(res.sendStatus).toHaveBeenCalledWith(403);
+    expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.json).toHaveBeenCalledWith({ message: "Invalid token!" });
     expect(next).not.toHaveBeenCalled();
   });
 
   test("should call next if token is valid", () => {
     const validPayload = { id: 1, name: "test" };
-
-    getTokenFromHeaders.mockReturnValue("valid_token");
-    jwt.verify.mockImplementation((token, secret, callback) => {
-      callback(null, validPayload);
-    });
+    getTokenFromHeaders.mockReturnValue("validToken");
+    verifyToken.mockReturnValue(1);
+    jwt.decode.mockReturnValue(validPayload);
 
     authenticateToken(req, res, next);
 

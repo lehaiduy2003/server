@@ -14,7 +14,7 @@ async function userSignUp(email, password) {
     const { refreshToken, accessToken } = generateTokens(newUser);
     return { newUser, refreshToken, accessToken };
   } catch (error) {
-    console.error("Error during sign up:", error);
+    console.error("Error during sign up:");
     throw error;
   }
 }
@@ -53,7 +53,7 @@ async function userSignIn(email, password) {
     const { refreshToken, accessToken } = generateTokens(user);
     return { user, refreshToken, accessToken };
   } catch (error) {
-    console.error("Error during sign in:", error);
+    console.error("Error during sign in:");
     throw error;
   }
 }

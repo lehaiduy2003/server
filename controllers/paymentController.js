@@ -4,19 +4,21 @@ const { createPaymentIntent } = require("../services/paymentService");
  * @description create a payment intent and return client secret
  */
 async function checkout(req, res) {
-  const { items } = req.body;
+  const { products } = req.body;
 
-  if (!items) res.status(400).send({ error: "invalid data provided" });
+  if (!products) res.status(400).send({ error: "invalid data provided" });
+
+  console.log(products);
 
   try {
-    const clientSecret = await createPaymentIntent(items);
+    const clientSecret = await createPaymentIntent(products);
 
     if (!clientSecret)
       res.status(502).send({ error: "no payment intent created" });
 
     res.status(201).send({ clientSecret: clientSecret });
   } catch (error) {
-    res.sendStatus(500);
+    errorHandler(error, req, res);
   }
 }
 
