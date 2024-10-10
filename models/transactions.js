@@ -4,7 +4,7 @@ const transactionsSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
   buyer: {
-    id: {
+    _id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "UserProfiles",
       required: true,
@@ -13,7 +13,7 @@ const transactionsSchema = new mongoose.Schema({
     phone: { type: String, required: true },
   },
   seller: {
-    id: {
+    _id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "UserProfiles",
       required: true,
@@ -23,7 +23,7 @@ const transactionsSchema = new mongoose.Schema({
   },
   products: [
     {
-      id: {
+      _id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Products",
         required: true,
@@ -31,7 +31,7 @@ const transactionsSchema = new mongoose.Schema({
       name: { type: String, required: true },
       img: { type: String, required: true },
       price: { type: Number, required: true },
-      quantity: { type: Number, require: true },
+      quantity: { type: Number, required: true },
     },
   ],
   shippingFee: { type: Number, default: 30000 },
@@ -42,7 +42,7 @@ const transactionsSchema = new mongoose.Schema({
   },
 });
 
-transactionsSchema.index({ "products.id": 1 });
+transactionsSchema.index({ "products._id": 1 });
 transactionsSchema.index({ status: 1 });
 transactionsSchema.index({ createdAt: -1 });
 

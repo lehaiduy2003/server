@@ -1,6 +1,6 @@
 // const prisma = require("../prisma/db");
 const Products = require("../models/products");
-async function getHomepageProducts(limit = 10, scroll = 1) {
+async function findProducts(limit = 10, scroll = 1) {
   try {
     const skip = (scroll - 1) * limit;
     const products = await Products.find()
@@ -57,4 +57,4 @@ async function findProductsWithFilter(
   }
 }
 
-module.exports = { getHomepageProducts, findProductsWithFilter };
+module.exports = { findProducts, findProductsWithFilter };

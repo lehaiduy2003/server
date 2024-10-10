@@ -2,18 +2,13 @@ const Transactions = require("../models/transactions");
 
 /**
  * insert new transaction into transactions collection
- * @param {object} items: {id, name, img, price, quantity}
- * @param {object} buyer: {id, address, phone}
- * @param {object} seller: {id, address, phone}
+ * @param {object} products: {_id, name, img, price, quantity}
+ * @param {object} buyer: {_id, address, phone}
+ * @param {object} seller: {_id, address, phone}
  * @param {number} shippingFee (default = 30000)
  * @returns {Promise<Document<Transactions> | null>}
  */
-async function insertNewTransaction(
-  products,
-  buyer,
-  seller,
-  shippingFee = 30000
-) {
+async function insertTransaction(products, buyer, seller, shippingFee = 30000) {
   try {
     const transaction = await Transactions.create({
       buyer: buyer,
@@ -31,14 +26,14 @@ async function insertNewTransaction(
 
 /**
  * update transaction status by transaction _id.
- * @param {string} id
+ * @param {string} _id
  * @param {"pending" | "shipping" | "completed" | "refunded"} status
  * @returns {Promise<Boolean>}
  */
-async function updateTransactionStatusByID(id, status) {
+async function updateTransactionStatusByID(_id, status) {
   try {
     const updatedTransaction = await Transactions.findByIdAndUpdate(
-      id,
+      _id,
       { status: status },
       { new: true } // This option returns the updated document
     );
@@ -48,4 +43,4 @@ async function updateTransactionStatusByID(id, status) {
     throw error;
   }
 }
-module.exports = { insertNewTransaction, updateTransactionStatusByID };
+module.exports = { insertTransaction, updateTransactionStatusByID };

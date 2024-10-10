@@ -5,12 +5,12 @@ const activitiesSchema = new mongoose.Schema({
   date: { type: Date, required: true },
   log: { type: String, required: true },
   actor: {
-    id: {
+    _id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Accounts",
       required: true,
     },
-    role: { type: String, enum: ["buyer", "recycler", "admin", "seller"] },
+    role: { type: String, enum: ["customer", "admin", "seller"] },
   },
 });
 

@@ -15,21 +15,21 @@ const userProfilesSchema = new mongoose.Schema({
   avatar: { type: String },
   dob: { type: Date },
   bio: { type: String },
-  address: [{ type: String, required: true }],
+  address: [{ type: String }],
   reputationScore: { type: Number, default: 100, required: true },
   followers: { type: Number, default: 0 },
   sold: { type: Number, default: 0 },
   bought: { type: Number, default: 0 },
   accountId: {
-    _id: { type: mongoose.Schema.Types.ObjectId, ref: "Accounts" },
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Accounts",
     required: true,
-    unique: true,
   },
   products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Products" }],
   payments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Payments" }],
   cart: [
     {
-      id: { type: mongoose.Schema.Types.ObjectId, ref: "Products" },
+      _id: { type: mongoose.Schema.Types.ObjectId, ref: "Products" },
       img: { type: String },
       name: { type: String },
       price: { type: Number },
@@ -38,7 +38,7 @@ const userProfilesSchema = new mongoose.Schema({
   ],
   likes: [
     {
-      id: { type: mongoose.Schema.Types.ObjectId, ref: "Products" },
+      _id: { type: mongoose.Schema.Types.ObjectId, ref: "Products" },
       img: { type: String },
       name: { type: String },
       price: { type: Number },
@@ -46,7 +46,7 @@ const userProfilesSchema = new mongoose.Schema({
   ],
   following: [
     {
-      id: { type: mongoose.Schema.Types.ObjectId, ref: "UserProfiles" },
+      _id: { type: mongoose.Schema.Types.ObjectId, ref: "UserProfiles" },
       name: { type: String },
       avatar: { type: String },
     },

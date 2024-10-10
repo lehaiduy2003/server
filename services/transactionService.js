@@ -1,10 +1,25 @@
 const { ObjectId } = require("mongodb");
 const {
   updateTransactionStatusByID,
-  insertNewTransaction,
+  insertTransaction,
 } = require("../repositories/transactionRepository");
+const { decodeData, encodeData } = require("../utils/data");
+
 /**
- *
+ * TODO: Implement the encodeProductPrices function
+ * Decodes the prices of all products in the array
+ * @param {[{id: ObjectId, img: string, name: string, price: number, quantity: number}]} products - The products array
+ * @returns {[{id: ObjectId, img: string, name: string, price: number, quantity: number}]} - The products array with decoded prices
+ */
+function encodeProductPrices(products) {
+  return products.map((product) => ({
+    ...product,
+    price: encodeData(product.price),
+    quantity: encodeData(product.quantity),
+  }));
+}
+
+/**
  * @param {[products:{id: ObjectId, img: string, name: string, price: number, quantity: number}]} products
  * @param {id: ObjectId, address: string, phone: string} buyer
  * @param {id: ObjectId, address: string, phone: string} seller
@@ -12,7 +27,7 @@ const {
  */
 async function createTransaction(products, buyer, seller) {
   try {
-    const transaction = await insertNewTransaction(products, buyer, seller);
+    const transaction = await insertTransaction(products, buyer, seller);
     return transaction;
   } catch (error) {
     console.error("error while create transaction: ", error);

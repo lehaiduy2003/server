@@ -1,7 +1,7 @@
 // server/routers/homeRouter.js
 const {
-  getHomepage,
-  searchProducts,
+  getProductsData,
+  searchProductsData,
 } = require("../controllers/productController");
 const { checkout } = require("../controllers/paymentController");
 const {
@@ -16,12 +16,12 @@ const apiRouter = require("express").Router();
 
 apiRouter.get("/products", authenticateToken, (req, res) => {
   console.log("GET /products");
-  getHomepage(req, res);
+  getProductsData(req, res);
 });
 
 apiRouter.get("/products/search", authenticateToken, checkCache, (req, res) => {
   console.log("GET /products/search");
-  searchProducts(req, res);
+  searchProductsData(req, res);
 });
 
 apiRouter.post("/checkout", authenticateToken, (req, res) => {

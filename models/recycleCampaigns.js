@@ -13,7 +13,7 @@ const recycleCampaignsSchema = new mongoose.Schema({
   participants: { type: Number, required: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
-  userId: {
+  user_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "UserProfiles",
     required: true,

@@ -15,9 +15,7 @@ async function connectToMongoDB() {
 const mongoosePromise = connectToMongoDB();
 
 async function closeMongoose() {
-  if (mongoosePromise) {
-    await mongoosePromise.disconnect();
-  }
+  await mongoosePromise.connection.close();
 }
 
 module.exports = { mongoosePromise, closeMongoose };

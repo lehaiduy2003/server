@@ -1,13 +1,15 @@
 //const { insertToken, updateToken } = require("../repositories/tokenRepository");
-const { insertUser, checkUser } = require("../repositories/userRepository");
+const { checkAccountByEmail } = require("../repositories/accountRepository");
+const { insertUser } = require("../repositories/userRepository");
 
-const { hashPassword, verifyPassword } = require("../utils/password");
+const { hashData, verifyData } = require("../utils/data");
 const { generateTokens, refreshAccessToken } = require("../utils/tokens");
 
 async function userSignUp(email, password) {
-  const hashedPassword = hashPassword(password);
+  const hashedPassword = hashData(password);
+  const hashedEmail = hashData(email);
   try {
-    const newUser = await insertUser(email, hashedPassword);
+    const newUser = await insertUser(hashedEmail, hashedPassword);
     if (!newUser) {
       return null;
     }
@@ -18,40 +20,27 @@ async function userSignUp(email, password) {
     throw error;
   }
 }
-
-// function saveTokensToDb(userId, accessToken, refreshToken) {
-//   return insertToken(userId, accessToken, refreshToken);
-// }
-
-// function modifyToken(userId, token) {
-//   return updateToken(userId, token);
-// }
-
-// function verifyToken(token) {
-//   const tokenFound = findToken(token);
-//   return tokenFound
-// }
 function getNewAccessToken(token) {
   return refreshAccessToken(token);
 }
 
 async function userSignIn(email, password) {
   try {
-    const user = await checkUser(email); // Sử dụng userRepository
+    const account = await checkAccountByEmail(email);
 
-    if (!user) {
+    if (!account) {
       return null; // User không tồn tại
     }
 
-    const [salt, hash] = user.password.split(":");
-    const isPasswordValid = verifyPassword(password, salt, hash); // Sử dụng utils/password
+    const [passwordSalt, passwordHash] = account.password.split(":");
+    const isPasswordValid = verifyData(password, passwordSalt, passwordHash);
 
     if (!isPasswordValid) {
       return null; // Mật khẩu không đúng
     }
 
-    const { refreshToken, accessToken } = generateTokens(user);
-    return { user, refreshToken, accessToken };
+    const { refreshToken, accessToken } = generateTokens(account);
+    return { account, refreshToken, accessToken };
   } catch (error) {
     console.error("Error during sign in:");
     throw error;
