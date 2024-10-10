@@ -1,5 +1,5 @@
 const errorHandler = require("./errorMiddleware");
-const redisClientPromise = require("../configs/redis");
+const { redisClientPromise } = require("../configs/redis");
 
 /**
  * format cache key for preventing NoSQL injection

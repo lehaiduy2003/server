@@ -1,5 +1,6 @@
 const { createClient } = require("redis");
 require("dotenv").config();
+
 async function connectToRedis() {
   try {
     const redisClient = createClient({
@@ -19,4 +20,10 @@ async function connectToRedis() {
 
 const redisClientPromise = connectToRedis();
 
-module.exports = redisClientPromise;
+async function closeRedis() {
+  if (redisClientPromise) {
+    await redisClientPromise.quit();
+  }
+}
+
+module.exports = { redisClientPromise, closeRedis };

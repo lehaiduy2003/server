@@ -27,7 +27,7 @@ async function getHomepageProducts(limit = 10, scroll = 1) {
  * @param {string} sort
  * @param {string} orderBy: 1 or -1
  * @param {number} limit
- * @returns {[Products]}
+ * @returns {Promise<[Products]>}
  */
 async function findProductsWithFilter(
   name,

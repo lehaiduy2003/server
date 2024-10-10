@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+require("dotenv").config();
 
 async function connectToMongoDB() {
   try {
@@ -13,4 +14,10 @@ async function connectToMongoDB() {
 
 const mongoosePromise = connectToMongoDB();
 
-module.exports = mongoosePromise;
+async function closeMongoose() {
+  if (mongoosePromise) {
+    await mongoosePromise.disconnect();
+  }
+}
+
+module.exports = { mongoosePromise, closeMongoose };

@@ -1,14 +1,14 @@
 const { saveToCache } = require("../middlewares/cacheMiddleware");
 const errorHandler = require("../middlewares/errorMiddleware");
-const { getHomepageData, getProducts } = require("../services/homeService");
+const { getHomepageData, getProducts } = require("../services/productService");
 
 async function getHomepage(req, res) {
   const { limit, skip } = req.query;
 
   try {
     const homepageData = await getHomepageData(limit, skip);
-    if (!homepageData)
-      res.status(502).send({ error: "No homepage data found" });
+    if (!homepageData || homepageData.length === 0)
+      return res.status(404).send({ error: "No homepage data found" });
 
     res.status(200).send(homepageData);
   } catch (error) {
@@ -21,7 +21,10 @@ async function searchProducts(req, res) {
 
   try {
     const products = await getProducts(name, sort, orderBy, limit);
-    if (!products) res.status(502).send({ error: "No products found" });
+
+    if (!products || products.length === 0)
+      return res.status(404).send({ error: "No searched result found" });
+
     // Save the results to the cache
     if (req.cacheKey) {
       await saveToCache(req.cacheKey, products);
