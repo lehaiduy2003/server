@@ -1,7 +1,7 @@
 // server/models/product.js
-import { Schema } from "mongoose";
-import BaseModel from "./BaseModel";
-import { IPayment, Payment } from "../libs/zod/models/Payment";
+import { Model, Schema } from "mongoose";
+import BaseModel from "./init/BaseModel";
+import { Payment } from "../libs/zod/model/Payment";
 
 const paymentsSchema: Schema<Payment> = new Schema({
   date: {
@@ -18,17 +18,8 @@ paymentsSchema.index({ type: 1 });
 paymentsSchema.index({ account: 1 });
 paymentsSchema.index({ date: 1 });
 
-export default class Payments extends BaseModel<IPayment> {
-  private static instance: Payments;
-
-  private constructor() {
-    super("Payments", paymentsSchema);
-  }
-
-  public static getInstance(): Payments {
-    if (!Payments.instance) {
-      Payments.instance = new Payments();
-    }
-    return Payments.instance;
+export default class PaymentsModel extends BaseModel<PaymentsModel & Model<Payment>, Payment> {
+  public constructor() {
+    super("payment", paymentsSchema);
   }
 }

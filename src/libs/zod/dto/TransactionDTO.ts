@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { ProductDTOSchema } from "./ProductDTO";
 import { TraderDTOSchema } from "./TraderDTO";
-import { PaymentMethodSchema, PaymentStatusSchema, StatusSchema } from "../models/Transaction";
+import { PaymentMethodSchema, PaymentStatusSchema, StatusSchema } from "../model/Transaction";
 
 export const TransactionDTOSchema = z.object({
   products: ProductDTOSchema.array(),

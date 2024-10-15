@@ -1,13 +1,15 @@
 import { Request, Response } from "express";
 
-import BaseController from "./BaseController";
-import TransactionService from "../services/TransactionService";
+import BaseController from "./init/BaseController";
 
-import { validateTransaction } from "../libs/zod/models/Transaction";
 import { validateTransactionUpdateDTO } from "../libs/zod/dto/TransactionUpdateDTO";
 import { validateTransactionDTO } from "../libs/zod/dto/TransactionDTO";
+import ServiceFactory from "../services/init/ServiceFactory";
+import TransactionService from "../services/TransactionService";
 
 export default class TransactionController extends BaseController {
+  private transactionService: TransactionService = ServiceFactory.createService("transaction") as TransactionService;
+
   /**
    * Not implemented
    * @param req
@@ -27,7 +29,7 @@ export default class TransactionController extends BaseController {
     try {
       const parsedTransaction = validateTransactionDTO(req.body);
 
-      const transaction = await TransactionService.createTransaction(parsedTransaction);
+      const transaction = await this.transactionService.createTransaction(parsedTransaction);
 
       if (!transaction) res.status(502).send({ message: "No transaction created" });
       else res.status(201).send(transaction);
@@ -47,7 +49,7 @@ export default class TransactionController extends BaseController {
       const { id } = req.params;
       const parsedTransactionUpdateDTO = validateTransactionUpdateDTO({ _id: id, ...req.body });
 
-      const updatedTransaction: boolean = await TransactionService.updateTransactionById(
+      const updatedTransaction: boolean = await this.transactionService.updateTransactionById(
         parsedTransactionUpdateDTO._id,
         parsedTransactionUpdateDTO
       );

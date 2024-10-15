@@ -1,9 +1,10 @@
 // server/models/product.js
-import { Schema } from "mongoose";
+import { Model, Schema } from "mongoose";
 
-import BaseModel from "./BaseModel";
+import BaseModel from "./init/BaseModel";
 
-import { Account, IAccount, RecyclerField } from "../libs/zod/models/Account";
+import { Account, IAccount, RecyclerField } from "../libs/zod/model/Account";
+import { ServiceModelTypeSchema, validateServiceModelType } from "../libs/zod/ServiceModelType";
 
 const accountsSchema: Schema<Account> = new Schema({
   email: { type: String, required: true, unique: true },
@@ -42,23 +43,15 @@ accountsSchema.index({ email: 1 }, { unique: true });
 accountsSchema.index({ role: 1 });
 accountsSchema.index({ createAt: 1 });
 
-export default class Accounts extends BaseModel<IAccount> {
+export default class AccountsModel extends BaseModel<AccountsModel & Model<Account>, Account> {
   private recyclerField?: RecyclerField;
-  private static instance: Accounts;
 
-  private constructor() {
-    super("Accounts", accountsSchema);
+  public constructor() {
+    super("account", accountsSchema);
     this.recyclerField = this.recyclerField || {
       recyclingLicenseNumber: "",
       recyclingCapacity: 0,
     };
-  }
-
-  public static getInstance(): Accounts {
-    if (!Accounts.instance) {
-      Accounts.instance = new Accounts();
-    }
-    return Accounts.instance;
   }
 
   public async findAccountByEmail(email: string): Promise<Account | null> {

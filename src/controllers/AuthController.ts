@@ -1,17 +1,20 @@
 import { Request, Response } from "express";
 
-import BaseController from "./BaseController";
+import BaseController from "./init/BaseController";
 import AuthService from "../services/AuthService";
 
 import getTokenFromHeaders from "../utils/getTokenFromHeader";
-import { validateAccount } from "../libs/zod/models/Account";
+import { validateAccount } from "../libs/zod/model/Account";
+import ServiceFactory from "../services/init/ServiceFactory";
+import AuthModel from "../models/AuthModel";
 
 export default class AuthController extends BaseController {
+  private authService: AuthService = ServiceFactory.createService("auth") as AuthService;
   public async delete(req: Request, res: Response): Promise<void> {
     this.checkReqBody(req, res);
     try {
       const { id } = req.params;
-      const result = await AuthService.deleteAccount(id);
+      const result = await this.authService.deleteAccount(id);
 
       if (result) {
         res.status(200).send({ message: "User deleted" });
@@ -31,7 +34,7 @@ export default class AuthController extends BaseController {
     this.checkReqBody(req, res);
     try {
       const account = req.body;
-      const result = await AuthService.signUp(account);
+      const result = await this.authService.signUp(account);
 
       if (!result || result === null) {
         res.status(400).send({ error: "No user created" });
@@ -54,7 +57,7 @@ export default class AuthController extends BaseController {
       if (!refreshToken) {
         res.status(403).send({ error: "No token provided" });
       } else {
-        const newAccessToken = AuthService.getNewAccessToken(String(refreshToken));
+        const newAccessToken = this.authService.getNewAccessToken(String(refreshToken));
         res.status(200).send({ accessToken: newAccessToken });
       }
     } catch (error) {
@@ -76,7 +79,7 @@ export default class AuthController extends BaseController {
 
       console.log(parsedAccount);
 
-      const result = await AuthService.signIn(parsedAccount.email, parsedAccount.password);
+      const result = await this.authService.signIn(parsedAccount.email, parsedAccount.password);
 
       if (!result || result === null) {
         res.status(502).send({ error: "Invalid credential" });

@@ -1,11 +1,20 @@
-import BaseService from "./BaseService";
 import { ObjectId } from "mongodb";
 import { ClientSession } from "mongoose";
-import UserProfiles from "../models/UserProfiles";
-import { IUserProfile, UserProfile, validateUserProfile } from "../libs/zod/models/UserProfile";
+import UserProfilesModel from "../models/UserProfilesModel";
 
-export default class UserProfileService extends BaseService<IUserProfile> {
-  private static userModel = UserProfiles.getInstance();
+import BaseService from "./init/BaseService";
+
+import { IUserProfile, UserProfile, validateUserProfile } from "../libs/zod/model/UserProfile";
+import { keyValue } from "../libs/zod/keyValue";
+
+export default class UserProfileService extends BaseService<UserProfilesModel> {
+  public constructor() {
+    super("user");
+  }
+
+  public override async readOne(field: keyof UserProfile, keyValue: keyValue): Promise<UserProfile | null> {
+    return await this.getModel().findByUnique(field, keyValue);
+  }
 
   /**
    * for creating a new user profile
@@ -13,11 +22,11 @@ export default class UserProfileService extends BaseService<IUserProfile> {
    * @param session
    * @returns
    */
-  static async createUserProfile(account_id: ObjectId, session: ClientSession): Promise<UserProfile | null> {
+  async createUserProfile(account_id: ObjectId, session: ClientSession): Promise<UserProfile | null> {
     const userProfileData = validateUserProfile({
       account_id: account_id,
     });
-    return await this.userModel.insert(userProfileData, session);
+    return await this.getModel().insert(userProfileData, session);
   }
 
   /**
@@ -25,8 +34,8 @@ export default class UserProfileService extends BaseService<IUserProfile> {
    * @param accountId
    * @returns
    */
-  static async isUserProfileExist(accountId: ObjectId): Promise<boolean> {
-    const userProfile = await this.userModel.findUserProfileByAccountId(accountId);
+  async isUserProfileExist(accountId: ObjectId): Promise<boolean> {
+    const userProfile = await this.getModel().findUserProfileByAccountId(accountId);
     return userProfile !== null;
   }
 }

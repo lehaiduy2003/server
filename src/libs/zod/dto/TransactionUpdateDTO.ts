@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 import { z } from "zod";
-import { PaymentStatusSchema, StatusSchema } from "../models/Transaction";
+import { PaymentStatusSchema, StatusSchema } from "../model/Transaction";
 
 export const TransactionUpdateDTOSchema = z.object({
   _id: z

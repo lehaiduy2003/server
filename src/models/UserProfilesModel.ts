@@ -1,10 +1,10 @@
-import { Schema } from "mongoose";
-import BaseModel from "./BaseModel";
+import { Model, Schema } from "mongoose";
+import BaseModel from "./init/BaseModel";
 
 import { ObjectId } from "mongodb";
-import Accounts from "./Accounts";
-import { IUserProfile, UserProfile } from "../libs/zod/models/UserProfile";
-import { Account } from "../libs/zod/models/Account";
+import AccountsModel from "./AccountsModel";
+import { IUserProfile, UserProfile } from "../libs/zod/model/UserProfile";
+import { Account } from "../libs/zod/model/Account";
 
 const userProfilesSchema: Schema<UserProfile> = new Schema({
   name: { type: String },
@@ -54,18 +54,11 @@ userProfilesSchema.index({ phone: 1 }, { unique: true, sparse: true });
 userProfilesSchema.index({ account_id: 1 }, { unique: true });
 userProfilesSchema.index({ reputationScore: 1 });
 
-export default class UserProfiles extends BaseModel<IUserProfile> {
-  private static instance: UserProfiles;
+export default class UserProfilesModel extends BaseModel<UserProfilesModel & Model<UserProfile>, UserProfile> {
+  private accountModel = new AccountsModel();
 
-  private constructor() {
-    super("UserProfiles", userProfilesSchema);
-  }
-
-  public static getInstance(): UserProfiles {
-    if (!UserProfiles.instance) {
-      UserProfiles.instance = new UserProfiles();
-    }
-    return UserProfiles.instance;
+  public constructor() {
+    super("user", userProfilesSchema);
   }
 
   /**
@@ -75,14 +68,14 @@ export default class UserProfiles extends BaseModel<IUserProfile> {
    */
   public async findUserProfileByAccountId(account_id: ObjectId): Promise<UserProfile | null> {
     try {
-      return Accounts.getInstance().getModel().findOne({ _id: account_id });
+      return this.accountModel.getModel().findOne({ _id: account_id });
     } catch (error) {
       throw new Error(`Error: ${error}`);
     }
   }
   public async findUserProfileByEmail(email: string): Promise<IUserProfile | null> {
     try {
-      const account: Account | null = await Accounts.getInstance().findAccountByEmail(email);
+      const account: Account | null = await this.accountModel.findAccountByEmail(email);
       if (account) {
         return this.findUserProfileByAccountId(new ObjectId(String(account._id)));
       }

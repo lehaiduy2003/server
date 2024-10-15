@@ -1,7 +1,7 @@
 // server/models/product.js
-import { Schema, SortOrder } from "mongoose";
-import BaseModel from "./BaseModel";
-import { IProduct, Product } from "../libs/zod/models/Product";
+import { Model, Schema, SortOrder } from "mongoose";
+import BaseModel from "./init/BaseModel";
+import { IProduct, Product } from "../libs/zod/model/Product";
 import { Filter } from "../libs/zod/Filter";
 
 const productsSchema: Schema<Product> = new Schema({
@@ -26,20 +26,10 @@ productsSchema.index({ price: 1 });
 productsSchema.index({ createAt: -1 });
 productsSchema.index({ type: 1 });
 
-export default class Products extends BaseModel<IProduct> {
-  private static instance: Products;
-
-  private constructor() {
-    super("Products", productsSchema);
+export default class ProductsModel extends BaseModel<ProductsModel & Model<Product>, Product> {
+  public constructor() {
+    super("product", productsSchema);
   }
-
-  public static getInstance(): Products {
-    if (!Products.instance) {
-      Products.instance = new Products();
-    }
-    return Products.instance;
-  }
-
   public async findSearchedProducts(filter: Filter): Promise<Product[]> {
     try {
       const results = await this.getModel().aggregate([

@@ -1,6 +1,6 @@
-import { Schema } from "mongoose";
-import BaseModel from "./BaseModel";
-import { ITransaction, Transaction } from "../libs/zod/models/Transaction";
+import { Model, Schema } from "mongoose";
+import BaseModel from "./init/BaseModel";
+import { ITransaction, Transaction } from "../libs/zod/model/Transaction";
 
 const transactionsSchema: Schema<Transaction> = new Schema({
   createdAt: { type: Date, default: Date.now },
@@ -52,17 +52,8 @@ transactionsSchema.index({ "products._id": 1 });
 transactionsSchema.index({ status: 1 });
 transactionsSchema.index({ createdAt: -1 });
 
-export default class Transactions extends BaseModel<ITransaction> {
-  private static instance: Transactions;
-
-  private constructor() {
-    super("Transactions", transactionsSchema);
-  }
-
-  public static getInstance(): Transactions {
-    if (!Transactions.instance) {
-      Transactions.instance = new Transactions();
-    }
-    return Transactions.instance;
+export default class TransactionsModel extends BaseModel<TransactionsModel & Model<Transaction>, Transaction> {
+  public constructor() {
+    super("transaction", transactionsSchema);
   }
 }

@@ -13,10 +13,10 @@ const paymentController = new PaymentController();
 const productController = new ProductController();
 const transactionController = new TransactionController();
 
-// apiRouter.get("/products", authenticateToken, async (req: Request, res: Response) => {
-//   console.log("GET /products");
-//   await productController.get(req, res);
-// });
+apiRouter.get("/products", authenticateToken, async (req: Request, res: Response) => {
+  console.log("GET /products");
+  await productController.get(req, res);
+});
 
 apiRouter.get("/products/search", authenticateToken, checkCache, async (req: Request, res: Response) => {
   console.log("GET /products/search");

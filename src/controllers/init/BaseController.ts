@@ -1,22 +1,22 @@
 import { Request, Response } from "express";
 
 import IController from "./IController";
-import errorHandler from "../middlewares/errorMiddleware";
+import errorHandler from "../../middlewares/errorMiddleware";
 
 export default abstract class BaseController implements IController {
-  patch(req: Request, res: Response): Promise<void> {
+  async patch(req: Request, res: Response): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  get(req: Request, res: Response): Promise<void> {
+  async get(req: Request, res: Response): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  post(req: Request, res: Response): Promise<void> {
+  async post(req: Request, res: Response): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  put(req: Request, res: Response): Promise<void> {
+  async put(req: Request, res: Response): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  delete(req: Request, res: Response): Promise<void> {
+  async delete(req: Request, res: Response): Promise<void> {
     throw new Error("Method not implemented.");
   }
   public checkReqBody(req: Request, res: Response): void {

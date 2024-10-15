@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
 
-import BaseController from "./BaseController";
+import BaseController from "./init/BaseController";
 import PaymentService from "../services/PaymentService";
 
 import { ProductDTO } from "../libs/zod/dto/ProductDTO";
 import { CheckoutProductDTO, validateCheckoutProductDTO } from "../libs/zod/dto/CheckoutProductDTO";
+import ServiceFactory from "../services/init/ServiceFactory";
 
 export default class PaymentController extends BaseController {
+  private paymentService: PaymentService = ServiceFactory.createService("payment") as PaymentService;
   /**
    * create a payment intent for the transaction
    * @param req request containing transaction data
@@ -28,7 +30,7 @@ export default class PaymentController extends BaseController {
         return;
       }
 
-      const clientSecret = await PaymentService.createPaymentIntent(checkoutProducts);
+      const clientSecret = await this.paymentService.createPaymentIntent(checkoutProducts);
 
       if (!clientSecret) {
         res.status(502).send({ error: "no payment intent created" });

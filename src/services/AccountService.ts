@@ -1,16 +1,18 @@
-import Accounts from "../models/Accounts";
-import BaseService from "./BaseService";
-import { Account, IAccount, validateAccount } from "../libs/zod/models/Account";
+import AccountsModel from "../models/AccountsModel";
+import BaseService from "./init/BaseService";
+import { Account, IAccount, validateAccount } from "../libs/zod/model/Account";
 import verifyPassword from "../libs/crypto/passwordVerifying";
 import hashPassword from "../libs/crypto/passwordHashing";
 import { ClientSession } from "mongoose";
 import { ObjectId } from "mongodb";
 
-export default class AccountService extends BaseService<IAccount> {
-  private static accountModel = Accounts.getInstance();
+export default class AccountService extends BaseService<AccountsModel> {
+  public constructor() {
+    super("account");
+  }
 
-  static async deleteAccountById(account_id: string): Promise<boolean> {
-    return this.accountModel.deleteByUnique("_id", new ObjectId(account_id), this.getSession());
+  async deleteAccountById(account_id: string): Promise<boolean> {
+    return this.getModel().deleteByUnique("_id", new ObjectId(account_id), this.getSession());
   }
 
   /**
@@ -18,8 +20,8 @@ export default class AccountService extends BaseService<IAccount> {
    * @param email
    * @returns
    */
-  static async getAccountByEmail(email: string): Promise<Account | null> {
-    return await this.accountModel.findAccountByEmail(email);
+  async getAccountByEmail(email: string): Promise<Account | null> {
+    return await this.getModel().findAccountByEmail(email);
   }
 
   /**
@@ -28,14 +30,14 @@ export default class AccountService extends BaseService<IAccount> {
    * @param session
    * @returns
    */
-  static async createAccount(data: Partial<Account>, session: ClientSession): Promise<Account | null> {
+  async createAccount(data: Partial<Account>, session: ClientSession): Promise<Account | null> {
     const hashedPassword = hashPassword(String(data.password));
     const accountData = validateAccount({
       email: String(data.email),
       password: hashedPassword,
       role: data.role,
     });
-    return await this.accountModel.insert(accountData, session);
+    return await this.getModel().insert(accountData, session);
   }
 
   /**
@@ -43,8 +45,8 @@ export default class AccountService extends BaseService<IAccount> {
    * @param accountId
    * @returns
    */
-  static async isAccountExist(email: string): Promise<boolean> {
-    const account = await this.accountModel.findAccountByEmail(email);
+  async isAccountExist(email: string): Promise<boolean> {
+    const account = await this.getModel().findAccountByEmail(email);
     return account !== null;
   }
 

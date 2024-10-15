@@ -8,9 +8,8 @@ const app = express();
 
 import authRouter from "./routers/authRouter";
 import apiRouter from "./routers/apiRouter";
-
-import { mongoosePromise, closeMongoose } from "./configs/database";
-import { redisClientPromise, closeRedis } from "./configs/redis";
+import { mongoDBConnection } from "./configs/database";
+import { redisConnection } from "./configs/redis";
 
 const port = process.env.PORT ? parseInt(process.env.PORT) : 10000;
 
@@ -29,7 +28,7 @@ app.use(
 
 (async () => {
   try {
-    await Promise.all([mongoosePromise, redisClientPromise]);
+    await Promise.all([mongoDBConnection.connect(), redisConnection.connect()]);
   } catch (error) {
     console.error("Failed to connect to database and redis", error);
   }
@@ -44,5 +43,5 @@ app.use(
   })
   .catch((error) => async () => {
     console.error("Failed to start server", error);
-    await Promise.all([closeMongoose(), closeRedis()]);
+    await Promise.all([mongoDBConnection.close(), redisConnection.close()]);
   });
