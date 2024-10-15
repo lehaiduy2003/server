@@ -18,8 +18,8 @@ import { Activity } from "../../libs/zod/model/Activity";
  * @param K: document
  * @description: BaseModel class provides common CRUD operations for various Mongoose models.
  */
-export default abstract class BaseModel<T, K> implements IModel {
-  private model: typeof Model<K>;
+export default abstract class BaseModel<T, K> implements IModel<K> {
+  private readonly model: typeof Model<K>;
   protected constructor(name: string, schema: Schema) {
     switch (name) {
       case ServiceModelTypeSchema.Enum.account:
@@ -105,6 +105,7 @@ export default abstract class BaseModel<T, K> implements IModel {
       const result = await this.model.create([data], { session });
       return result[0];
     } catch (error) {
+      console.error(`Error while inserting ${data}`);
       throw error;
     }
   }
@@ -138,7 +139,7 @@ export default abstract class BaseModel<T, K> implements IModel {
    * @returns A promise that resolves to an array of documents, or null if the operation failed.
    */
   async findWithFilter(filter: Filter, field?: keyof K, keyValue?: keyValue): Promise<K[] | null> {
-    const filterQuery: FilterQuery<K> = field && keyValue ? ({ [field as keyof K]: keyValue } as FilterQuery<K>) : {};
+    const filterQuery: FilterQuery<K> = field && keyValue ? ({ [field]: keyValue } as FilterQuery<K>) : {};
     try {
       const results = await this.model
         .find(filterQuery)

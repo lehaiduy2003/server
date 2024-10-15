@@ -1,5 +1,4 @@
 import { CheckoutProductDTO } from "../libs/zod/dto/CheckoutProductDTO";
-import { ProductDTO } from "../libs/zod/dto/ProductDTO";
 
 export const calculateOrderAmount = (products: CheckoutProductDTO[]) => {
   // Calculate the order total on the server to prevent people from directly manipulating the amount on the client

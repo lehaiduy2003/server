@@ -1,7 +1,7 @@
 // server/models/product.js
-import { Model, Schema, SortOrder } from "mongoose";
+import { Model, Schema } from "mongoose";
 import BaseModel from "./init/BaseModel";
-import { IProduct, Product } from "../libs/zod/model/Product";
+import { Product } from "../libs/zod/model/Product";
 import { Filter } from "../libs/zod/Filter";
 
 const productsSchema: Schema<Product> = new Schema({

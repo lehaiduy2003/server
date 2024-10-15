@@ -10,8 +10,8 @@ import { Account } from "../libs/zod/model/Account";
 
 // For
 export default class AuthModel extends BaseModel<AuthModel & Model<Account, UserProfile>, any> {
-  private accountModel = new AccountsModel();
-  private userProfileModel = new UserProfilesModel();
+  private readonly accountModel = new AccountsModel();
+  private readonly userProfileModel = new UserProfilesModel();
   private static instance: AuthModel;
   private constructor() {
     super("auth", new Schema());

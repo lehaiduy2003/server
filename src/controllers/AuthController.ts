@@ -6,7 +6,6 @@ import AuthService from "../services/AuthService";
 import getTokenFromHeaders from "../utils/getTokenFromHeader";
 import { validateAccount } from "../libs/zod/model/Account";
 import ServiceFactory from "../services/init/ServiceFactory";
-import AuthModel from "../models/AuthModel";
 
 export default class AuthController extends BaseController {
   private authService: AuthService = ServiceFactory.createService("auth") as AuthService;

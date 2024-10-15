@@ -8,7 +8,9 @@ import ServiceFactory from "../services/init/ServiceFactory";
 import TransactionService from "../services/TransactionService";
 
 export default class TransactionController extends BaseController {
-  private transactionService: TransactionService = ServiceFactory.createService("transaction") as TransactionService;
+  private readonly transactionService: TransactionService = ServiceFactory.createService(
+    "transaction"
+  ) as TransactionService;
 
   /**
    * Not implemented

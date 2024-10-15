@@ -1,8 +1,7 @@
-import mongoose, { ClientSession, Document, Model } from "mongoose";
+import mongoose, { ClientSession } from "mongoose";
 import IService from "./IService";
 import { Filter } from "../../libs/zod/Filter";
 import { keyValue } from "../../libs/zod/keyValue";
-import BaseModel from "../../models/init/BaseModel";
 import ModelFactory from "../../models/init/ModelFactory";
 import { validateServiceModelType } from "../../libs/zod/ServiceModelType";
 
@@ -12,7 +11,7 @@ import { validateServiceModelType } from "../../libs/zod/ServiceModelType";
  * It handles session management and model instantiation.
  * @param T: Model instance
  */
-export default abstract class BaseService<T> implements IService {
+export default abstract class BaseService<T, K> implements IService<K> {
   private session: ClientSession | undefined;
   private model: T;
 
@@ -65,19 +64,19 @@ export default abstract class BaseService<T> implements IService {
     await this.session.endSession();
   }
 
-  async create(data: Partial<any>): Promise<any> {
+  async create(data: Partial<K>, session: ClientSession): Promise<K> {
     throw new Error("Method not implemented.");
   }
-  async read(field: keyof any, keyValue: keyValue, filter: Filter): Promise<any[]> {
+  async read(field: keyof K, keyValue: keyValue, filter: Filter): Promise<K[]> {
     throw new Error("Method not implemented.");
   }
-  readOne(field: keyof any, keyValue: keyValue): Promise<any | null> {
+  readOne(field: keyof K, keyValue: keyValue): Promise<K | null> {
     throw new Error("Method not implemented.");
   }
-  async update(field: keyof any, keyValue: keyValue, data: Partial<any>): Promise<boolean> {
+  async update(field: keyof K, keyValue: keyValue, data: Partial<K>, session: ClientSession): Promise<boolean> {
     throw new Error("Method not implemented.");
   }
-  async delete(field: keyof any, keyValue: keyValue): Promise<boolean> {
+  async delete(field: keyof K, keyValue: keyValue, session: ClientSession): Promise<boolean> {
     throw new Error("Method not implemented.");
   }
 }

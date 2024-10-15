@@ -4,10 +4,10 @@ import UserProfilesModel from "../models/UserProfilesModel";
 
 import BaseService from "./init/BaseService";
 
-import { IUserProfile, UserProfile, validateUserProfile } from "../libs/zod/model/UserProfile";
+import { UserProfile, validateUserProfile } from "../libs/zod/model/UserProfile";
 import { keyValue } from "../libs/zod/keyValue";
 
-export default class UserProfileService extends BaseService<UserProfilesModel> {
+export default class UserProfileService extends BaseService<UserProfilesModel, UserProfile> {
   public constructor() {
     super("user");
   }

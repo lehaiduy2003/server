@@ -1,10 +1,11 @@
 import { keyValue } from "../../libs/zod/keyValue";
 import { Filter } from "../../libs/zod/Filter";
+import { ClientSession } from "mongoose";
 
-export default interface IService {
-  create(data: any): Promise<any>;
-  read(field: keyof any, keyValue: keyValue, filter: Filter): Promise<any[]>;
-  readOne(field: keyof any, keyValue: keyValue): Promise<any | null>;
-  update(field: keyof any, keyValue: keyValue, data: Partial<any>): Promise<boolean>;
-  delete(field: keyof any, keyValue: keyValue): Promise<boolean>;
+export default interface IService<T> {
+  create(data: Partial<T>, session: ClientSession): Promise<Partial<T>>;
+  read(field: keyof T, keyValue: keyValue, filter: Filter): Promise<Partial<T>[]>;
+  readOne(field: keyof T, keyValue: keyValue): Promise<Partial<T> | null>;
+  update(field: keyof T, keyValue: keyValue, data: Partial<T>, session: ClientSession): Promise<boolean>;
+  delete(field: keyof T, keyValue: keyValue, session: ClientSession): Promise<boolean>;
 }

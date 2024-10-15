@@ -55,7 +55,7 @@ userProfilesSchema.index({ account_id: 1 }, { unique: true });
 userProfilesSchema.index({ reputationScore: 1 });
 
 export default class UserProfilesModel extends BaseModel<UserProfilesModel & Model<UserProfile>, UserProfile> {
-  private accountModel = new AccountsModel();
+  private readonly accountModel = new AccountsModel();
 
   public constructor() {
     super("user", userProfilesSchema);

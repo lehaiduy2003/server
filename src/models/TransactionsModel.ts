@@ -1,6 +1,6 @@
 import { Model, Schema } from "mongoose";
 import BaseModel from "./init/BaseModel";
-import { ITransaction, Transaction } from "../libs/zod/model/Transaction";
+import { Transaction } from "../libs/zod/model/Transaction";
 
 const transactionsSchema: Schema<Transaction> = new Schema({
   createdAt: { type: Date, default: Date.now },

@@ -6,7 +6,7 @@ import hashPassword from "../libs/crypto/passwordHashing";
 import { ClientSession } from "mongoose";
 import { ObjectId } from "mongodb";
 
-export default class AccountService extends BaseService<AccountsModel> {
+export default class AccountService extends BaseService<AccountsModel, Account> {
   public constructor() {
     super("account");
   }

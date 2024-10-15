@@ -9,7 +9,7 @@ import { ITransaction, Transaction } from "../libs/zod/model/Transaction";
 import { TransactionDTO } from "../libs/zod/dto/TransactionDTO";
 import { TransactionUpdateDTO } from "../libs/zod/dto/TransactionUpdateDTO";
 
-export default class TransactionService extends BaseService<TransactionsModel> {
+export default class TransactionService extends BaseService<TransactionsModel, Transaction> {
   public constructor() {
     super("transaction");
   }

@@ -3,9 +3,9 @@ import { Model, Schema } from "mongoose";
 
 import BaseModel from "./init/BaseModel";
 
-import { Activity, IActivity } from "../libs/zod/model/Activity";
+import { Activity } from "../libs/zod/model/Activity";
 
-const activitiesSchema: Schema<IActivity> = new Schema({
+const activitiesSchema: Schema<Activity> = new Schema({
   date: { type: Date, required: true, default: Date.now },
   log: { type: String, required: true },
   actor: {

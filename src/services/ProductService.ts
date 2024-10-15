@@ -7,7 +7,7 @@ import { Filter, validateFilter } from "../libs/zod/Filter";
 
 import { SearchResultDTO, validateSearchResultDTO } from "../libs/zod/dto/SearchResultDTO";
 
-export default class ProductService extends BaseService<ProductsModel> {
+export default class ProductService extends BaseService<ProductsModel, Product> {
   public constructor() {
     super("product");
   }

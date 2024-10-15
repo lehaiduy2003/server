@@ -1,7 +1,7 @@
 // server/models/product.js
 import { Model, Schema } from "mongoose";
 import BaseModel from "./init/BaseModel";
-import { IRecycleCampaign, RecycleCampaign } from "../libs/zod/model/RecyclingCampaign";
+import { RecycleCampaign } from "../libs/zod/model/RecyclingCampaign";
 
 const recycleCampaignsSchema: Schema<RecycleCampaign> = new Schema({
   name: { type: String, required: true },

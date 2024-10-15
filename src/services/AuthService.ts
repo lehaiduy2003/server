@@ -2,21 +2,16 @@ import { ObjectId } from "mongodb";
 
 import BaseService from "./init/BaseService";
 
-import Accounts from "../models/AccountsModel";
-import UserProfiles from "../models/UserProfilesModel";
-
 import generateTokens from "../libs/jwt/tokensGenerating";
 import refreshAccessToken from "../libs/jwt/tokenRefreshing";
 
 import { AuthDTO, validateAuthDTO } from "../libs/zod/dto/AuthDTO";
-import { IUserProfile, UserProfile, validateUserProfile } from "../libs/zod/model/UserProfile";
-import { Account, IAccount, validateAccount } from "../libs/zod/model/Account";
-import AccountService from "./AccountService";
-import UserProfileService from "./UserProfileService";
-import mongoose, { ClientSession, mongo } from "mongoose";
-import AccountsModel from "../models/AccountsModel";
-import AuthModel from "../models/AuthModel";
+import { Account } from "../libs/zod/model/Account";
 
+import UserProfileService from "./UserProfileService";
+
+import AuthModel from "../models/AuthModel";
+import AccountService from "./AccountService";
 /**
  * Responsible for handling the authentication process.
  * ``It supported by the AccountService and UserProfileService``.
@@ -24,7 +19,7 @@ import AuthModel from "../models/AuthModel";
  * @class AccountService
  * @class UserProfileService
  */
-export default class AuthService extends BaseService<AuthModel> {
+export default class AuthService extends BaseService<AuthModel, unknown> {
   private accountService = new AccountService();
   private userProfileService = new UserProfileService();
   private static instance: AuthService;
@@ -124,9 +119,7 @@ export default class AuthService extends BaseService<AuthModel> {
         return false;
       }
 
-      const isDeletedUserProfile = await this.userProfileService
-        .getModel()
-        .deleteByUnique("account_id", user_id, this.getSession());
+      const isDeletedUserProfile = await this.userProfileService.delete("account_id", user_id, this.getSession());
 
       if (!isDeletedUserProfile) {
         await this.abortTransaction();

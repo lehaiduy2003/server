@@ -3,8 +3,7 @@ import { Model, Schema } from "mongoose";
 
 import BaseModel from "./init/BaseModel";
 
-import { Account, IAccount, RecyclerField } from "../libs/zod/model/Account";
-import { ServiceModelTypeSchema, validateServiceModelType } from "../libs/zod/ServiceModelType";
+import { Account, RecyclerField } from "../libs/zod/model/Account";
 
 const accountsSchema: Schema<Account> = new Schema({
   email: { type: String, required: true, unique: true },
@@ -30,21 +29,27 @@ const accountsSchema: Schema<Account> = new Schema({
 
 // Pre-save hook to check account type and conditionally add fields
 accountsSchema.pre("save", function (next) {
-  if (this.role === "recycler") {
-    if (!this.recyclerField || !this.recyclerField.recyclingLicenseNumber || !this.recyclerField.recyclingCapacity) {
-      return next(new Error("recyclerField is required when role is recycler"));
-    }
+  if (this.role !== "recycler") {
+    return next();
   }
+
+  if (!isValidRecyclerField(this.recyclerField as RecyclerField)) {
+    return next(new Error("recyclerField is required when role is recycler"));
+  }
+
   next();
 });
 
+function isValidRecyclerField(recyclerField: RecyclerField) {
+  return recyclerField && recyclerField.recyclingLicenseNumber && recyclerField.recyclingCapacity;
+}
 // Create indexes
 accountsSchema.index({ email: 1 }, { unique: true });
 accountsSchema.index({ role: 1 });
 accountsSchema.index({ createAt: 1 });
 
 export default class AccountsModel extends BaseModel<AccountsModel & Model<Account>, Account> {
-  private recyclerField?: RecyclerField;
+  private readonly recyclerField?: RecyclerField;
 
   public constructor() {
     super("account", accountsSchema);

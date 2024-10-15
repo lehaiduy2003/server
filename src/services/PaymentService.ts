@@ -1,19 +1,18 @@
 import dotenv from "dotenv";
 import Stripe from "stripe";
-import { ClientSession } from "mongoose";
 
 import BaseService from "./init/BaseService";
 
 import { CheckoutProductDTO } from "../libs/zod/dto/CheckoutProductDTO";
 
 import { calculateOrderAmount } from "../utils/currency";
-import { IPayment, Payment } from "../libs/zod/model/Payment";
 import PaymentsModel from "../models/PaymentsModel";
+import { Payment } from "../libs/zod/model/Payment";
 
 dotenv.config();
 const stripe = new Stripe(String(process.env.STRIPE_SECRET_KEY));
 
-export default class PaymentService extends BaseService<PaymentsModel> {
+export default class PaymentService extends BaseService<PaymentsModel, Payment> {
   public constructor() {
     super("payment");
   }

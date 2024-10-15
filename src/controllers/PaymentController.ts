@@ -8,7 +8,7 @@ import { CheckoutProductDTO, validateCheckoutProductDTO } from "../libs/zod/dto/
 import ServiceFactory from "../services/init/ServiceFactory";
 
 export default class PaymentController extends BaseController {
-  private paymentService: PaymentService = ServiceFactory.createService("payment") as PaymentService;
+  private readonly paymentService: PaymentService = ServiceFactory.createService("payment") as PaymentService;
   /**
    * create a payment intent for the transaction
    * @param req request containing transaction data

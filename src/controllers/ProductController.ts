@@ -8,7 +8,7 @@ import { validateFilter } from "../libs/zod/Filter";
 import ServiceFactory from "../services/init/ServiceFactory";
 
 export default class ProductController extends BaseController {
-  private productService: ProductService = ServiceFactory.createService("product") as ProductService;
+  private readonly productService: ProductService = ServiceFactory.createService("product") as ProductService;
   /**
    * get products (for no search query params (sort, order, find by, etc) provided by user - homepage, user products, etc)
    * @param req request containing query params (limit, skip, page)
