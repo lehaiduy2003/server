@@ -13,7 +13,7 @@ export default class UserProfileService extends BaseService<IUserProfile> {
    * @param session
    * @returns
    */
-  static async createUserProfile(account_id: string, session: ClientSession): Promise<UserProfile | null> {
+  static async createUserProfile(account_id: ObjectId, session: ClientSession): Promise<UserProfile | null> {
     const userProfileData = validateUserProfile({
       account_id: account_id,
     });

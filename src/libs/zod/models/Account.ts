@@ -1,6 +1,18 @@
 import { Document } from "mongoose";
 import { z } from "zod";
 
+export const passwordSchema = z.string().refine(
+  (password) => {
+    const hasNumber = /\d/.test(password);
+    const hasLetter = /[a-zA-Z]/.test(password);
+    const isLongEnough = password.length > 12;
+    return hasNumber && hasLetter && isLongEnough;
+  },
+  {
+    message: "Password must contain both numbers and letters and be longer than 12 characters.",
+  }
+);
+
 export const RecyclerFieldSchema = z.object({
   recyclingLicenseNumber: z.string(),
   recyclingCapacity: z.number(),

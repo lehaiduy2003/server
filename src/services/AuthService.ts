@@ -56,7 +56,7 @@ export default class AuthService extends BaseService<IAuthService> {
         return null;
       }
 
-      const newUser = await UserProfileService.createUserProfile(String(newAccount._id), session);
+      const newUser = await UserProfileService.createUserProfile(new ObjectId(String(newAccount._id)), session);
       if (!newUser) {
         await session.abortTransaction();
         return null;
@@ -65,7 +65,11 @@ export default class AuthService extends BaseService<IAuthService> {
       const tokens = generateTokens(String(newAccount._id), newAccount.role);
 
       await session.commitTransaction();
-      return validateAuthDTO({ account_id: String(newAccount._id), ...tokens });
+      return validateAuthDTO({
+        account_id: String(newAccount._id),
+        user_id: String(newUser._id),
+        ...tokens,
+      });
     } catch (error) {
       await session.abortTransaction();
       console.error("Error during sign up:");

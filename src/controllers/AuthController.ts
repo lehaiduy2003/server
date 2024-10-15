@@ -70,7 +70,11 @@ export default class AuthController extends BaseController {
   async signIn(req: Request, res: Response): Promise<void> {
     this.checkReqBody(req, res);
     try {
+      console.log(req.body);
+
       const parsedAccount = validateAccount(req.body);
+
+      console.log(parsedAccount);
 
       const result = await AuthService.signIn(parsedAccount.email, parsedAccount.password);
 
