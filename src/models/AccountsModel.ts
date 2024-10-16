@@ -41,7 +41,7 @@ accountsSchema.pre("save", function (next) {
 });
 
 function isValidRecyclerField(recyclerField: RecyclerField) {
-  return recyclerField && recyclerField.recyclingLicenseNumber && recyclerField.recyclingCapacity;
+  return recyclerField?.recyclingLicenseNumber ?? (false && recyclerField?.recyclingCapacity) ?? false;
 }
 // Create indexes
 accountsSchema.index({ email: 1 }, { unique: true });

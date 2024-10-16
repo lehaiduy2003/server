@@ -7,7 +7,7 @@ import TransactionService from "../TransactionService";
 import UserProfileService from "../UserProfileService";
 
 export default class ServiceFactory {
-  static createService(type: string): BaseService<any> {
+  static createService(type: string): BaseService<any, any> {
     switch (type) {
       case "user":
         return new UserProfileService();

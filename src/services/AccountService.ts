@@ -1,6 +1,6 @@
 import AccountsModel from "../models/AccountsModel";
 import BaseService from "./init/BaseService";
-import { Account, IAccount, validateAccount } from "../libs/zod/model/Account";
+import { Account, validateAccount } from "../libs/zod/model/Account";
 import verifyPassword from "../libs/crypto/passwordVerifying";
 import hashPassword from "../libs/crypto/passwordHashing";
 import { ClientSession } from "mongoose";

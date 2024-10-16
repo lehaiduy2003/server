@@ -8,7 +8,7 @@ import { validateAccount } from "../libs/zod/model/Account";
 import ServiceFactory from "../services/init/ServiceFactory";
 
 export default class AuthController extends BaseController {
-  private authService: AuthService = ServiceFactory.createService("auth") as AuthService;
+  private readonly authService: AuthService = ServiceFactory.createService("auth") as AuthService;
   public async delete(req: Request, res: Response): Promise<void> {
     this.checkReqBody(req, res);
     try {

@@ -1,10 +1,9 @@
 import { ObjectId } from "mongodb";
-import { ClientSession } from "mongoose";
 
 import BaseService from "./init/BaseService";
 
 import TransactionsModel from "../models/TransactionsModel";
-import { ITransaction, Transaction } from "../libs/zod/model/Transaction";
+import { Transaction } from "../libs/zod/model/Transaction";
 
 import { TransactionDTO } from "../libs/zod/dto/TransactionDTO";
 import { TransactionUpdateDTO } from "../libs/zod/dto/TransactionUpdateDTO";

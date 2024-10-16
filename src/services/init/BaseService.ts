@@ -13,7 +13,7 @@ import { validateServiceModelType } from "../../libs/zod/ServiceModelType";
  */
 export default abstract class BaseService<T, K> implements IService<K> {
   private session: ClientSession | undefined;
-  private model: T;
+  private readonly model: T;
 
   protected constructor(modelType?: string) {
     if (modelType === undefined) {

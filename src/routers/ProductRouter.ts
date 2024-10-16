@@ -4,7 +4,7 @@ import checkCache from "../middlewares/cacheMiddleware";
 import BaseRouter from "./OriginRouter";
 
 export default class ProductRouter extends BaseRouter {
-  private productController: ProductController;
+  private readonly productController: ProductController;
   constructor() {
     super();
     this.productController = new ProductController();

@@ -36,8 +36,6 @@ export default class ModelFactory {
         return new ActivitiesModel();
       case "payment":
         return new PaymentsModel();
-      case "transaction":
-        return new TransactionsModel();
       case "recycle":
         return new RecycleCampaignsModel();
       case "auth":
