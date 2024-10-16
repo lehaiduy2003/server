@@ -20,8 +20,8 @@ import AccountService from "./AccountService";
  * @class UserProfileService
  */
 export default class AuthService extends BaseService<AuthModel, unknown> {
-  private accountService = new AccountService();
-  private userProfileService = new UserProfileService();
+  private readonly accountService = new AccountService();
+  private readonly userProfileService = new UserProfileService();
   private static instance: AuthService;
 
   private constructor() {
@@ -50,7 +50,7 @@ export default class AuthService extends BaseService<AuthModel, unknown> {
 
       const newAccount = await this.accountService.createAccount(data, this.getSession());
       if (!newAccount) {
-        await this.getSession().abortTransaction();
+        await this.abortTransaction();
         return null;
       }
 
@@ -59,24 +59,24 @@ export default class AuthService extends BaseService<AuthModel, unknown> {
         this.getSession()
       );
       if (!newUser) {
-        await this.getSession().abortTransaction();
+        await this.abortTransaction();
         return null;
       }
 
       const tokens = generateTokens(String(newAccount._id), newAccount.role);
 
-      await this.getSession().commitTransaction();
+      await this.commitTransaction();
       return validateAuthDTO({
         account_id: String(newAccount._id),
         user_id: String(newUser._id),
         ...tokens,
       });
     } catch (error) {
-      await this.getSession().abortTransaction();
+      await this.abortTransaction();
       console.error("Error during sign up:");
       throw error;
     } finally {
-      await this.getSession().endSession();
+      await this.endSession();
     }
   }
   async signIn(email: string, password: string): Promise<AuthDTO | null> {
@@ -88,7 +88,7 @@ export default class AuthService extends BaseService<AuthModel, unknown> {
         return null;
       }
 
-      const isPasswordValid = AccountService.verifyAccountPassword(account, password);
+      const isPasswordValid = this.accountService.verifyAccountPassword(account, password);
 
       const accountId = new ObjectId(String(account._id));
 
